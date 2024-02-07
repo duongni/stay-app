@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import SearchInput from "../SearchInput";
+import { ModeToggle } from "../theme-toggle";
+import { NavMenu } from "../NavMenu";
 
 const Navbar = () => {
   const router = useRouter();
@@ -22,7 +24,10 @@ const Navbar = () => {
           </div>
           <SearchInput />
           <div className="flex gap-3 items-center">
-            <div>theme</div>
+            <div>
+              <ModeToggle />
+              <NavMenu />
+            </div>
             <UserButton afterSignOutUrl="/" />
             {/* below : check if the user NOT sign-in, then display two buttons: sign-in and sign-up*/}
             {!userId && (
