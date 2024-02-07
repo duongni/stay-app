@@ -4,6 +4,7 @@ import Container from "../Container";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import SearchInput from "../SearchInput";
 
 const Navbar = () => {
   const router = useRouter();
@@ -19,9 +20,11 @@ const Navbar = () => {
             <Image src="/logo.svg" alt="logo" width="20" height="30" />
             <div className="font-bold text-xl">Stay</div>
           </div>
+          <SearchInput />
           <div className="flex gap-3 items-center">
             <div>theme</div>
             <UserButton afterSignOutUrl="/" />
+            {/* below : check if the user NOT sign-in, then display two buttons: sign-in and sign-up*/}
             {!userId && (
               <>
                 <Button
