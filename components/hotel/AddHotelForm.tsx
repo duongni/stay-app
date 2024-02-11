@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Hotel, Room } from "@prisma/client";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import * as z from "zod";
 import {
   Form,
@@ -115,7 +116,31 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     console.log(values);
   }
 
-  const handleImageDelete = (image: string) => {};
+  const handleImageDelete = (image: string) => {
+    setImageIsDeleting(true);
+    const imageKey = image.substring(image.lastIndexOf("/") + 1);
+
+    axios
+      .post("/api/uploadthing/delete", { imageKey })
+      .then((res) => {
+        if (res.data.success) {
+          setImage("");
+          toast({
+            variant: "success",
+            description: "Image removed",
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          variant: "destructive",
+          description: "Something went wrong",
+        });
+      })
+      .finally(() => {
+        setImageIsDeleting(false);
+      });
+  };
 
   return (
     <div>
