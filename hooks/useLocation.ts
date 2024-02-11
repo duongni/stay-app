@@ -7,7 +7,7 @@ const useLocation = () => {
     );
   };
 
-  const getStateByCode = (countryCode: string, stateCode: string) => {
+  const getStateByCode = (countryCode: string, stateCode?: string) => {
     const state = State.getAllStates().find(
       (state) =>
         state.countryCode === countryCode && state.isoCode === stateCode
@@ -23,14 +23,14 @@ const useLocation = () => {
     );
   };
 
-  const getStateCities = (countryCode: string, stateCode: string) => {
+  const getStateCities = (countryCode: string, stateCode?: string) => {
     return City.getAllCities().filter(
       (city) => city.countryCode === countryCode && city.stateCode === stateCode
     );
   };
 
   return {
-    getAllCountries: Country.getAllCountries(),
+    getAllCountries: Country.getAllCountries,
     getCountryByCode,
     getStateByCode,
     getCountryStates,
