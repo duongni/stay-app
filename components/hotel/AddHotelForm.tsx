@@ -21,7 +21,7 @@ import { Checkbox } from "../ui/checkbox";
 import { useEffect, useState } from "react";
 import { UploadButton } from "../uploadthing";
 import Image from "next/image";
-import { Loader2, XCircle } from "lucide-react";
+import { Loader2, PenLine, Pencil, XCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import useLocation from "@/hooks/useLocation";
 import { ICity, IState } from "country-state-city";
@@ -32,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 /*This defines an interface named AddHotelFormProps. 
 It specifies that any object of type AddHotelFormProps 
@@ -95,13 +96,13 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   const [cities, setCities] = useState<ICity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
+  const router = useRouter();
   const { getAllCountries, getCountryStates, getStateCities } = useLocation();
   const countries = getAllCountries();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: hotel || {
       title: "",
       description: "",
       image: "",
@@ -145,7 +146,29 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    setIsLoading(true);
+    if (hotel) {
+      //update hotel
+    } else {
+      axios
+        .post("/api/hotel", values)
+        .then((res) => {
+          toast({
+            variant: "success",
+            description: "🎉 Hotel created",
+          });
+          router.push(`/hotel/${res.data.id}`);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            description: "Something went wrong!",
+          });
+          setIsLoading(false);
+        });
+    }
   }
 
   const handleImageDelete = (image: string) => {
@@ -595,6 +618,35 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   </FormItem>
                 )}
               />
+              <div className="flex justify-between gap-2 flex-wrap">
+                {hotel ? (
+                  <Button className="max-w-[150px]" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4" /> Updating
+                      </>
+                    ) : (
+                      <>
+                        <PenLine className="mr-2 h-4 w-4" /> Update
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Button className="max-w-[150px]" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4" />
+                        Creating
+                      </>
+                    ) : (
+                      <>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Create Hotel
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </form>
