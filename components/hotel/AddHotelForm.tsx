@@ -576,6 +576,25 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="locationDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location Description *</FormLabel>
+                    <FormDescription>
+                      Provide a detailed location description of your hotel
+                    </FormDescription>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Located in xyz, the hotel is on the beach...."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
         </form>
