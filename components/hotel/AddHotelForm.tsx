@@ -126,6 +126,16 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   });
 
   useEffect(() => {
+    if (typeof image === "string") {
+      form.setValue("image", image, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [image]);
+
+  useEffect(() => {
     const selectedCountry = form.watch("country");
     const countryStates = getCountryStates(selectedCountry);
     if (countryStates) {
@@ -205,11 +215,10 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     <div>
       <Form {...form}>
         <form
-          method="POST"
-          onSubmit={() => {
-            console.log(form.getValues()); // Log the form values before submission
-            form.handleSubmit(onSubmit)(); // Call handleSubmit function
-          }}
+          onSubmit={form.handleSubmit((values) => {
+            console.log("Form values:", values); // Add this line to log the form data
+            onSubmit(values); // Submit the form
+          })}
           className="space-y-6"
         >
           <h3 className="text-lg font-semibold">
