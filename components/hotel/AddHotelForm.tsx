@@ -144,8 +144,12 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Log all form data to the console
+    console.log("Form values:", values);
+
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
     setIsLoading(true);
     if (hotel) {
       //update hotel
@@ -200,7 +204,14 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          method="POST"
+          onSubmit={() => {
+            console.log(form.getValues()); // Log the form values before submission
+            form.handleSubmit(onSubmit)(); // Call handleSubmit function
+          }}
+          className="space-y-6"
+        >
           <h3 className="text-lg font-semibold">
             {hotel ? "Update your hotel" : "Describe your hotel"}
           </h3>
