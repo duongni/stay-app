@@ -163,6 +163,24 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     setIsLoading(true);
     if (hotel) {
       //update hotel
+      axios
+        .patch(`/api/hotel/${hotel.id}`, values)
+        .then((res) => {
+          toast({
+            variant: "success",
+            description: "🎉 Hotel updated",
+          });
+          router.push(`/hotel/${res.data.id}`);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            description: "Something went wrong!",
+          });
+          setIsLoading(false);
+        });
     } else {
       axios
         .post("/api/hotel", values)
