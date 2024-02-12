@@ -21,7 +21,7 @@ import { Checkbox } from "../ui/checkbox";
 import { useEffect, useState } from "react";
 import { UploadButton } from "../uploadthing";
 import Image from "next/image";
-import { Loader2, PenLine, Pencil, XCircle } from "lucide-react";
+import { Loader2, PenLine, Pencil, Trash, XCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import useLocation from "@/hooks/useLocation";
 import { ICity, IState } from "country-state-city";
@@ -95,6 +95,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   const [states, setStates] = useState<IState[]>([]);
   const [cities, setCities] = useState<ICity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isHotelDeleting, setIsHotelDeleting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const { getAllCountries, getCountryStates, getStateCities } = useLocation();
@@ -202,6 +203,31 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
         });
     }
   }
+
+  const handleDeleteHotel = async (hotel: HotelWithRooms) => {
+    setIsHotelDeleting(true);
+    const getImageKey = (src: string) =>
+      src.substring(src.lastIndexOf("/") + 1);
+    try {
+      const imageKey = getImageKey(hotel.image);
+      await axios.post("/api/uploadthing/delete", { imageKey });
+      await axios.delete(`/api/hotel/${hotel.id}`);
+
+      setIsHotelDeleting(false);
+      toast({
+        variant: "success",
+        description: "Hotel Deleted.",
+      });
+      router.push("/hotel/new");
+    } catch (error: any) {
+      console.log(error);
+      setIsHotelDeleting(false);
+      toast({
+        variant: "destructive",
+        description: `Hotel deletion could not be completed! ${error.message}`,
+      });
+    }
+  };
 
   const handleImageDelete = (image: string) => {
     setImageIsDeleting(true);
@@ -657,6 +683,27 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 )}
               />
               <div className="flex justify-between gap-2 flex-wrap">
+                {hotel && (
+                  <Button
+                    onClick={() => handleDeleteHotel(hotel)}
+                    variant="ghost"
+                    type="button"
+                    className="max-w-[150px]"
+                    disabled={isHotelDeleting || isLoading}
+                  >
+                    {isHotelDeleting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4" />
+                        Deleting
+                      </>
+                    ) : (
+                      <>
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete
+                      </>
+                    )}
+                  </Button>
+                )}
                 {hotel ? (
                   <Button className="max-w-[150px]" disabled={isLoading}>
                     {isLoading ? (
