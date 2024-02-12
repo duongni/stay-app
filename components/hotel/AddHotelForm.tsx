@@ -21,7 +21,7 @@ import { Checkbox } from "../ui/checkbox";
 import { useEffect, useState } from "react";
 import { UploadButton } from "../uploadthing";
 import Image from "next/image";
-import { Loader2, PenLine, Pencil, Trash, XCircle } from "lucide-react";
+import { Eye, Loader2, PenLine, Pencil, Trash, XCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import useLocation from "@/hooks/useLocation";
 import { ICity, IState } from "country-state-city";
@@ -704,6 +704,17 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                     )}
                   </Button>
                 )}
+
+                {hotel && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push(`/hotel-details/${hotel.id}`)}
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                  </Button>
+                )}
+
                 {hotel ? (
                   <Button className="max-w-[150px]" disabled={isLoading}>
                     {isLoading ? (
