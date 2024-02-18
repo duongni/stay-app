@@ -33,6 +33,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { Terminal } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 /*This defines an interface named AddHotelFormProps. 
 It specifies that any object of type AddHotelFormProps 
@@ -682,6 +685,16 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   </FormItem>
                 )}
               />
+              {hotel && !hotel.rooms.length && (
+                <Alert className="bg-[#0084FF] text-white">
+                  <Terminal className="h-4 w-4 stroke-white" />
+                  <AlertTitle>One last step!</AlertTitle>
+                  <AlertDescription>
+                    Hotel was created successfully.
+                    <div>Please add rooms to complete hotel setup.</div>
+                  </AlertDescription>
+                </Alert>
+              )}
               <div className="flex justify-between gap-2 flex-wrap">
                 {hotel && (
                   <Button
@@ -711,7 +724,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                     variant="outline"
                     onClick={() => router.push(`/hotel-details/${hotel.id}`)}
                   >
-                    <Eye className="mr-2 h-4 w-4" />
+                    <Eye className="mr-2 h-4 w-4" /> View
                   </Button>
                 )}
 
