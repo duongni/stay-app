@@ -21,7 +21,15 @@ import { Checkbox } from "../ui/checkbox";
 import { useEffect, useState } from "react";
 import { UploadButton } from "../uploadthing";
 import Image from "next/image";
-import { Eye, Loader2, PenLine, Pencil, Trash, XCircle } from "lucide-react";
+import {
+  Eye,
+  Loader2,
+  PenLine,
+  Pencil,
+  Plus,
+  Trash,
+  XCircle,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import useLocation from "@/hooks/useLocation";
 import { ICity, IState } from "country-state-city";
@@ -36,6 +44,14 @@ import { useRouter } from "next/navigation";
 import { Terminal } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 /*This defines an interface named AddHotelFormProps. 
 It specifies that any object of type AddHotelFormProps 
@@ -103,6 +119,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   const router = useRouter();
   const { getAllCountries, getCountryStates, getStateCities } = useLocation();
   const countries = getAllCountries();
+  const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -726,6 +743,30 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   >
                     <Eye className="mr-2 h-4 w-4" /> View
                   </Button>
+                )}
+
+                {hotel && (
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="max-w-[150px]"
+                      >
+                        {" "}
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Room
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add a Room</DialogTitle>
+                        <DialogDescription>
+                          Add details about a room in your hotel.
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 )}
 
                 {hotel ? (
