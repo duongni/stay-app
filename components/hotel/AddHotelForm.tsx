@@ -52,6 +52,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import AddRoomForm from "../room/AddRoomForm";
 
 /*This defines an interface named AddHotelFormProps. 
 It specifies that any object of type AddHotelFormProps 
@@ -758,13 +759,14 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                         Add Room
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
+                    <DialogContent className="max-w-[900px] w-[90%]">
+                      <DialogHeader className="px-2">
                         <DialogTitle>Add a Room</DialogTitle>
                         <DialogDescription>
                           Add details about a room in your hotel.
                         </DialogDescription>
                       </DialogHeader>
+                      <AddRoomForm />
                     </DialogContent>
                   </Dialog>
                 )}
