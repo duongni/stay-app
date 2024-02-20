@@ -50,7 +50,7 @@ model Room{
   bathroomCount Int @default(0)
   kingBed Int @default(0)
   queenBed Int @default(0)
-  Image String
+  image String
   breakfastPrice Int
   roomPrice Int
   roomService Boolean @default(false)
@@ -58,6 +58,7 @@ model Room{
   balcony Boolean @default(false)
   freeWifi Boolean @default(false)
   cityView Boolean @default(false)
+  gardenView Boolean @default(false)
   mountainView Boolean @default(false)
   oceanView Boolean @default(false)
   airCondition Boolean @default(false)
