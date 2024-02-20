@@ -54,6 +54,9 @@ import {
 } from "@/components/ui/dialog";
 import AddRoomForm from "../room/AddRoomForm";
 
+import RoomCard from "../room/RoomCard";
+import { Separator } from "../ui/separator";
+
 /*This defines an interface named AddHotelFormProps. 
 It specifies that any object of type AddHotelFormProps 
 must have a property named hotel that is either of type 
@@ -805,6 +808,19 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   </Button>
                 )}
               </div>
+              {hotel && !!hotel.rooms.length && (
+                <div>
+                  <Separator />
+                  <h3 className="text-lg font-semibold my-4">Hotel Rooms</h3>
+                  <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+                    {hotel.rooms.map((room) => {
+                      return (
+                        <RoomCard key={room.id} hotel={hotel} room={room} />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </form>

@@ -48,6 +48,7 @@ const formSchema = z.object({
     .min(1, { message: "Bathroom count is required" }),
   kingBed: z.coerce.number().min(0),
   queenBed: z.coerce.number().min(0),
+  twinBed: z.coerce.number().min(0),
   image: z.string().min(1, {
     message: "Image is required.",
   }),
@@ -85,6 +86,7 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
       bathroomCount: 0,
       kingBed: 0,
       queenBed: 0,
+      twinBed: 0,
       image: "",
       breakfastPrice: 0,
       roomPrice: 0,
@@ -544,6 +546,22 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
                     <FormLabel>Queen Bed</FormLabel>
                     <FormDescription>
                       How many Queen beds are in the room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input type="number" min={0} max={8} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="twinBed"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Twin Bed</FormLabel>
+                    <FormDescription>
+                      How many Twin beds are in the room?
                     </FormDescription>
                     <FormControl>
                       <Input type="number" min={0} max={8} {...field} />

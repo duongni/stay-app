@@ -12,7 +12,7 @@ export async function PATCH(
     const { userId } = auth();
 
     if (!params.hotelId) {
-      return new NextResponse("Hotel Id is required", { status: 400 });
+      return new NextResponse("Hotel ID is required", { status: 400 });
     }
 
     if (!userId) {
@@ -41,7 +41,7 @@ export async function DELETE(
     const { userId } = auth();
 
     if (!params.hotelId) {
-      return new NextResponse("Hotel Id is required", { status: 400 });
+      return new NextResponse("Room ID is required", { status: 400 });
     }
 
     if (!userId) {

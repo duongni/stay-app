@@ -50,6 +50,7 @@ model Room{
   bathroomCount Int @default(0)
   kingBed Int @default(0)
   queenBed Int @default(0)
+  twinBed Int @default(0)
   image String
   breakfastPrice Int
   roomPrice Int
@@ -74,10 +75,10 @@ model Room{
 }
 
 model Booking{
-  id String @id @default(uuid())
-  userName String
-  userId String
-  roomId String
+ id String @id @default(uuid())
+ userName String
+ userId String
+ roomId String
  hotelId String
  hotelOwnerId String
  startDate DateTime
