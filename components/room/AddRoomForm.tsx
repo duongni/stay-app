@@ -22,8 +22,9 @@ import { Checkbox } from "../ui/checkbox";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
-import { Loader2, XCircle } from "lucide-react";
+import { Loader2, PenLine, Pencil, XCircle } from "lucide-react";
 import { UploadButton } from "../uploadthing";
+import { useRouter } from "next/navigation";
 
 interface AddRoomFormProps {
   hotel?: Hotel & {
@@ -69,8 +70,10 @@ const formSchema = z.object({
 const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
   const [image, setImage] = useState<string | undefined>(room?.image);
   const [imageIsDeleting, setImageIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -96,6 +99,15 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
       soundProofed: false,
     },
   });
+  useEffect(() => {
+    if (typeof image === "string") {
+      form.setValue("image", image, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [image]);
 
   const handleImageDelete = (image: string) => {
     setImageIsDeleting(true);
@@ -122,8 +134,60 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
         setImageIsDeleting(false);
       });
   };
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Log all form data to the console
+    console.log("Form values:", values);
+
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+
+    setIsLoading(true);
+    if (hotel && room) {
+      //update hotel
+      axios
+        .patch(`/api/room/${room.id}`, values)
+        .then((res) => {
+          toast({
+            variant: "success",
+            description: "🎉 Room updated",
+          });
+          router.refresh();
+          setIsLoading(false);
+          handledialogOpen();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            description: "Something went wrong!",
+          });
+          setIsLoading(false);
+        });
+    } else {
+      if (!hotel) return;
+      axios
+        .post("/api/room", { ...values, hotelId: hotel.id })
+        .then((res) => {
+          toast({
+            variant: "success",
+            description: "🎉 Room created",
+          });
+          router.refresh();
+          setIsLoading(false);
+          handledialogOpen();
+        })
+        .catch((err) => {
+          console.log(err);
+          toast({
+            variant: "destructive",
+            description: "Something went wrong!",
+          });
+          setIsLoading(false);
+        });
+    }
+  }
   return (
-    <div className="max-h-[75vh overflow-y-auto px-2">
+    <div className="max-h-[75vh] overflow-y-auto px-2">
       <Form {...form}>
         <form>
           <FormField
@@ -131,7 +195,7 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Room Title</FormLabel>
+                <FormLabel>Room Title *</FormLabel>
                 <FormDescription>Room Type</FormDescription>
                 <FormControl>
                   <Input placeholder="Double Room" {...field} />
@@ -145,7 +209,7 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Room Description</FormLabel>
+                <FormLabel>Room Description *</FormLabel>
                 <FormDescription>
                   Provide quick description about the room
                 </FormDescription>
@@ -349,7 +413,7 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
                     </>
                   ) : (
                     <>
-                      <div className="flex flex-col items-center max-w-[400px] p-12 border-2 border-dashed border-primary/50 rounded mt-4">
+                      <div className="flex flex-col items-center max-w-[900px] p-12 border-2 border-dashed border-primary/50 rounded mt-4">
                         <UploadButton
                           endpoint="imageUploader"
                           onClientUploadComplete={(res) => {
@@ -488,23 +552,47 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="queenBed"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Queen Bed</FormLabel>
-                    <FormDescription>
-                      How many Queen beds are in the room?
-                    </FormDescription>
-                    <FormControl>
-                      <Input type="number" min={0} max={8} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
+          </div>
+
+          <div className="pt-4 pb-2">
+            {room ? (
+              <Button
+                onClick={form.handleSubmit(onSubmit)}
+                type="button"
+                className="max-w-[150px]"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4" /> Updating
+                  </>
+                ) : (
+                  <>
+                    <PenLine className="mr-2 h-4 w-4" /> Update
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={form.handleSubmit(onSubmit)}
+                type="button"
+                className="max-w-[150px]"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4" />
+                    Creating
+                  </>
+                ) : (
+                  <>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Create Room
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </form>
       </Form>
