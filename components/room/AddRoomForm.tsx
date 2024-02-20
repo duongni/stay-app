@@ -488,6 +488,22 @@ const AddRoomForm = ({ hotel, room, handledialogOpen }: AddRoomFormProps) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="queenBed"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Queen Bed</FormLabel>
+                    <FormDescription>
+                      How many Queen beds are in the room?
+                    </FormDescription>
+                    <FormControl>
+                      <Input type="number" min={0} max={8} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
         </form>
