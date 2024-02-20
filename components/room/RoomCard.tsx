@@ -27,6 +27,10 @@ import {
   Waves,
   Wifi,
 } from "lucide-react";
+import { Separator } from "../ui/separator";
+import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 interface RoomCardProps {
   hotel?: Hotel & { rooms: Room[] }; // Change the type of hotel to allow rooms
@@ -35,11 +39,18 @@ interface RoomCardProps {
 }
 
 const RoomCard = ({ hotel, room, booking = [] }: RoomCardProps) => {
+  const [isLoading, setIsLoading] = useState();
+
+  const pathname = usePathname();
+  const isHotelDetailsPage = pathname.includes("hotel-details");
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{room.title}</CardTitle>
-        <CardDescription>{room.description}</CardDescription>
+        <CardTitle className="mb-2">{room.title}</CardTitle>
+        <CardDescription className="text-xs">
+          {room.description}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="aspect-square overflow-hidden relative h-[200px] rounded-lg">
@@ -142,7 +153,29 @@ const RoomCard = ({ hotel, room, booking = [] }: RoomCardProps) => {
             </AmenityItem>
           )}
         </div>
+        <Separator />
+        <div className="flex gap-4 justify-between">
+          <div>
+            Room Price: <span className="font-bold">${room.roomPrice}</span>
+            <span className="text-xs">/day</span>
+          </div>
+          {!!room.breakfastPrice && (
+            <div>
+              Breakfast Price:{" "}
+              <span className="font-bold">${room.breakfastPrice}</span>
+              <span className="text-xs">/day/person</span>
+            </div>
+          )}
+        </div>
+        <Separator />
       </CardContent>
+      {isHotelDetailsPage ? (
+        <div>Hotel Details Page</div>
+      ) : (
+        <div className="flex w-full justify-between">
+          <Button></Button>
+        </div>
+      )}
     </Card>
   );
 };
